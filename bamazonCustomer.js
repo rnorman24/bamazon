@@ -50,14 +50,16 @@ function buyProduct() {
     ])
     .then(function(answer) {
       console.log(answer.itemId);
-      connection.query("SELECT * FROM products WHERE ?", { item_id: answer.itemId }, function(err, res) {
+      connection.query("SELECT * FROM products WHERE ?",
+      { item_id: answer.itemId }, function(err, res) {
         let qty = answer.units;      
         let totalPrice = qty * res[0].price;
         let stock = res[0].stock_quantity;
           if (stock < qty) {
-            console.log('Insufficient quantity! Only ' + stock + ' remain in stock.');
+            console.log('Insufficient quantity! Only ' + stock +
+            ' remain in stock.');
           } else { 
-            let updateStock = stock - qty;
+            let updateStock = stock - parseInt(qty);
             connection.query('UPDATE products SET ? WHERE ?',
             [
               {
@@ -69,20 +71,12 @@ function buyProduct() {
             ],
             function(err) {
               if (err) throw err;
-              console.log('Your total price is $' + totalPrice + ', Thank you for your order.');
+              console.log('Your total price is $' + totalPrice +
+              ', Thank you for your order.');
               console.log('Remaining stock: ' + updateStock);
-            }
-          )
+            })
           }
-         
-
       })
     })
+}
   //connection.end();
-  }
-  //connection.end();
-
-     
-      
-    
-
