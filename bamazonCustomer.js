@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+const inquirer = require('inquirer');
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -29,6 +30,59 @@ const connection = mysql.createConnection({
        '\tPrice: ' + res[i].price +
         '\n');
       }
-      connection.end();
+      buyProduct();
     });
   }
+
+function buyProduct() {
+  inquirer
+    .prompt([
+    {
+      name: "itemId",
+      type: "input",
+      message: "Please enter the Item ID of the product you'd like to buy: ",
+    },
+    {
+      name: "units",
+      type: "input",
+      message: "Please enter how many you'd like to buy: ",
+    }
+    ])
+    .then(function(answer) {
+      console.log(answer.itemId);
+      connection.query("SELECT * FROM products WHERE ?", { item_id: answer.itemId }, function(err, res) {
+        let qty = answer.units;      
+        let totalPrice = qty * res[0].price;
+        let stock = res[0].stock_quantity;
+          if (stock < qty) {
+            console.log('Insufficient quantity! Only ' + stock + ' remain in stock.');
+          } else { 
+            let updateStock = stock - qty;
+            connection.query('UPDATE products SET ? WHERE ?',
+            [
+              {
+                stock_quantity: updateStock
+              },
+              {
+                item_id: answer.itemId
+              }
+            ],
+            function(err) {
+              if (err) throw err;
+              console.log('Your total price is $' + totalPrice + ', Thank you for your order.');
+              console.log('Remaining stock: ' + updateStock);
+            }
+          )
+          }
+         
+
+      })
+    })
+  //connection.end();
+  }
+  //connection.end();
+
+     
+      
+    
+
