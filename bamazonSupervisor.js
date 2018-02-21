@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require('inquirer');
+asTable = require ('as-table');
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -16,6 +17,7 @@ const connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   console.log('Connected');
+  deptSales();
 });
 
 function deptSales() {
@@ -34,34 +36,23 @@ function deptSales() {
       query += "FROM products LEFT JOIN departments ON products.department_name = departments.department_name";
       query += "GROUP BY department_id";
 
-      console.log(answer.itemId);
-      connection.query("SELECT * FROM products WHERE ?",
-      { item_id: answer.itemId }, function(err, res) {
-        let qty = answer.units;      
-        let totalPrice = parseInt(qty) * res[0].price;
-        let stock = res[0].stock_quantity;
-          if (stock < qty) {
-            console.log('Insufficient quantity! Only ' + stock +
-            ' remain in stock.');
-          } else { 
-            let updateStock = stock - parseInt(qty);
-            connection.query('UPDATE products SET ? WHERE ?',
-            [
-              {
-                stock_quantity: updateStock,
-                product_sales: totalPrice
-              },
-              {
-                item_id: answer.itemId
-              }
-            ],
-            function(err) {
-              if (err) throw err;
-              console.log('Your total price is $' + Math.floor(totalPrice, -2) +
-              ', Thank you for your order.');
-              console.log('Remaining stock: ' + updateStock);
-              })
-            }
-          })
-    })
+      console.log(answer);
+       connection.query(query, [answer.start, answer.end], function(err, res) {
+        for (var i = 0; i < res.length; i++) {
+          console.log(
+            "department_id: " +
+              res[i].department_id +
+              " || department_name: " +
+              res[i].department_name +
+              " || over_head_costs: " +
+              res[i].over_head_costs +
+              " || product_sales: " +
+              res[i].product_sales +
+              " || total_profit: " +
+              res[i].total_profit
+          );
+        }
+      
+      });
+  })
 }

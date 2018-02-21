@@ -29,7 +29,8 @@ function runManager() {
           "View Products for Sale",
           "View Low Inventory",
           "Add to Inventory",
-          "Add New Product"
+          "Add New Product",
+          "Exit Program"
       ]
     })
     .then(function(answer) {
@@ -48,6 +49,11 @@ function runManager() {
 
         case "Add New Product":
         addProd();
+        break;
+
+        case "Exit Program":
+        console.log('Goodbye');
+        return connection.end();
         break;
 
       }
@@ -122,12 +128,11 @@ function addInv() {
             function(err) {
               if (err) throw err;
               console.log('Remaining stock: ' + updateStock);
+              runManager();
             }
-          )
-        
+          )        
       })
-    })
-    
+    })        
   }
 
 function addProd() {

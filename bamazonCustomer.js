@@ -2,37 +2,37 @@ const mysql = require("mysql");
 const inquirer = require('inquirer');
 
 const connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-  
-    // Your username
-    user: "root",
-  
-    // Your password
-    password: "s3cr1t",
-    database: "bamazon_DB"
-  });
+  host: "localhost",
+  port: 3306,
 
-  connection.connect(function(err) {
+  // Your username
+  user: "root",
+
+  // Your password
+  password: "s3cr1t",
+  database: "bamazon_DB"
+});
+
+connection.connect(function(err) {
+  if (err) throw err;
+  readProducts();
+});
+
+function readProducts() {
+  console.log("Selecting all products for sale...\n");
+  let query = "SELECT item_id, product_name, price FROM products";
+  connection.query(query, function(err, res) {
     if (err) throw err;
-    readProducts();
+
+    for (let i = 0; i < res.length; i++) {
+    console.log('Item Id: ' + res[i].item_id +
+      '\tProduct Name: ' + res[i].product_name +
+      '\tPrice: ' + res[i].price +
+      '\n');
+    }
+    buyProduct();      
   });
-
-  function readProducts() {
-    console.log("Selecting all products for sale...\n");
-    let query = "SELECT item_id, product_name, price FROM products";
-    connection.query(query, function(err, res) {
-      if (err) throw err;
-
-      for (let i = 0; i < res.length; i++) {
-      console.log('Item Id: ' + res[i].item_id +
-       '\tProduct Name: ' + res[i].product_name +
-       '\tPrice: ' + res[i].price +
-        '\n');
-      }
-      buyProduct();
-    });
-  }
+}
 
 function buyProduct() {
   inquirer
@@ -49,7 +49,6 @@ function buyProduct() {
     }
     ])
     .then(function(answer) {
-      console.log(answer.itemId);
       connection.query("SELECT * FROM products WHERE ?",
       { item_id: answer.itemId }, function(err, res) {
         let qty = answer.units;      
@@ -58,6 +57,7 @@ function buyProduct() {
           if (stock < qty) {
             console.log('Insufficient quantity! Only ' + stock +
             ' remain in stock.');
+            runExit();
           } else { 
             let updateStock = stock - parseInt(qty);
             connection.query('UPDATE products SET ? WHERE ?',
@@ -75,6 +75,7 @@ function buyProduct() {
               console.log('Your total price is $' + totalPrice +
               ', Thank you for your order.');
               console.log('Remaining stock: ' + updateStock);
+              runExit();
               })
             }
           })
@@ -86,15 +87,15 @@ function runExit() {
     .prompt([
       {
         type: "confirm",
-      name: "answer",
-      message: "Press enter to exit, y to continue: ",
-      default: false
+        name: "answer",
+        message: "Press enter to exit, y to continue: ",
+        default: false
       }]).then( e => {
         if (e.answer === false) {
+          console.log('Goodbye');
           return connection.end();
         } else {
           buyProduct();
         }
-    })
+      })
 }
-//connection.end();
