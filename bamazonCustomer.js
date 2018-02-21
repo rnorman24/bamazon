@@ -53,7 +53,7 @@ function buyProduct() {
       connection.query("SELECT * FROM products WHERE ?",
       { item_id: answer.itemId }, function(err, res) {
         let qty = answer.units;      
-        let totalPrice = qty * res[0].price;
+        let totalPrice = parseInt(qty) * res[0].price;
         let stock = res[0].stock_quantity;
           if (stock < qty) {
             console.log('Insufficient quantity! Only ' + stock +
@@ -63,7 +63,8 @@ function buyProduct() {
             connection.query('UPDATE products SET ? WHERE ?',
             [
               {
-                stock_quantity: updateStock
+                stock_quantity: updateStock,
+                product_sales: totalPrice
               },
               {
                 item_id: answer.itemId
@@ -74,9 +75,26 @@ function buyProduct() {
               console.log('Your total price is $' + totalPrice +
               ', Thank you for your order.');
               console.log('Remaining stock: ' + updateStock);
-            })
-          }
-      })
+              })
+            }
+          })
     })
 }
-  //connection.end();
+
+function runExit() {
+  inquirer
+    .prompt([
+      {
+        type: "confirm",
+      name: "answer",
+      message: "Press enter to exit, y to continue: ",
+      default: false
+      }]).then( e => {
+        if (e.answer === false) {
+          return connection.end();
+        } else {
+          buyProduct();
+        }
+    })
+}
+//connection.end();
