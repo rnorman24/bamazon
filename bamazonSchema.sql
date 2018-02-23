@@ -21,6 +21,6 @@ CREATE TABLE departments(
 
 ALTER TABLE products ADD product_sales DECIMAL(10,2) NOT NULL;
 
-SELECT department_id, departments.department_name, over_head_costs, SUM(products.product_sales) AS product_sales, product_sales - over_head_costs AS total_profit FROM products
+SELECT department_id, departments.department_name, over_head_costs, SUM(products.product_sales) AS product_sales, products.product_sales + -departments.over_head_costs AS total_profit FROM products
 LEFT JOIN departments ON products.department_name = departments.department_name
 GROUP BY department_id;

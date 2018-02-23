@@ -23,7 +23,7 @@ function readProducts() {
   let query = "SELECT item_id, product_name, price FROM products";
   connection.query(query, function(err, res) {
     if (err) throw err;
-
+    console.log('This is res: ' + res);
     for (let i = 0; i < res.length; i++) {
     console.log('Item Id: ' + res[i].item_id +
       '\tProduct Name: ' + res[i].product_name +
@@ -52,19 +52,19 @@ function buyProduct() {
       connection.query("SELECT * FROM products WHERE ?",
       { item_id: answer.itemId }, function(err, res) {
         let qty = answer.units;      
-        let totalPrice = parseInt(qty) * res[0].price;
+        let totalPrice = qty * parseFloat(res[0].price);
         let stock = res[0].stock_quantity;
           if (stock < qty) {
             console.log('Insufficient quantity! Only ' + stock +
             ' remain in stock.');
             runExit();
           } else { 
-            let updateStock = stock - parseInt(qty);
+            let updateStock = stock - parseFloat(qty);
             connection.query('UPDATE products SET ? WHERE ?',
             [
               {
                 stock_quantity: updateStock,
-                product_sales: totalPrice
+                product_sales: parseFloat(totalPrice)
               },
               {
                 item_id: answer.itemId
