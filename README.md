@@ -43,7 +43,7 @@ In this activity, I created an Amazon-like storefront demonstrating MySQL skills
 
 - - -
 
-* [Watch the demo](/bamazon-customer.mov).
+* [Watch demo #1](/bamazon-customer.mov).
 
 - - -
 
@@ -75,7 +75,7 @@ In this activity, I created an Amazon-like storefront demonstrating MySQL skills
 
 - - -
 
-* [Watch the demo](/bamazon-manager.mov).
+* [Watch demo #2](/bamazon-manager.mov).
 
 - - -
 
@@ -111,3 +111,8 @@ In this activity, I created an Amazon-like storefront demonstrating MySQL skills
 | 02            | Clothing        | 60000           | 100000        | 40000        |
 
 6. The `total_profit` column is calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` is not stored in any database. The custom ALIAS, GROUP BY, and JOINS were used.
+- - -
+
+* [Watch demo #3](/bamazon-supervisor.mov).
+
+- - -
