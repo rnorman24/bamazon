@@ -23,7 +23,6 @@ function readProducts() {
   let query = "SELECT item_id, product_name, price FROM products";
   connection.query(query, function(err, res) {
     if (err) throw err;
-    console.log('This is res: ' + res);
     for (let i = 0; i < res.length; i++) {
     console.log('Item Id: ' + res[i].item_id +
       '\tProduct Name: ' + res[i].product_name +

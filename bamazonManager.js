@@ -184,7 +184,7 @@ function addProd() {
         function(err) {
           if (err) throw err;
           console.log("Success!");
-          // re-prompt the user for if they want to bid or post
+          runManager();
         }
       );
     });
