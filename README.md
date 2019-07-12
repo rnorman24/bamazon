@@ -2,7 +2,7 @@
 
 ## Overview
 
-In this activity, I created an Amazon-like storefront demonstrating MySQL skills. The app will take in orders from customers and deplete stock from the store's inventory. I then programed my app to track product sales across your store's departments and then provide a summary of the highest-grossing departments in the store.
+In this project, I created an Amazon-like storefront demonstrating MySQL skills. The app will take in orders from customers and deplete stock from the store's inventory. I then programed my app to track product sales across your store's departments and then provide a summary of the highest-grossing departments in the store.
 
 ## Demonstrations
 
